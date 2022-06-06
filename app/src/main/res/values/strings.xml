@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Review App</string>
+    <string name="facebook_app_id">194666566079699</string>
+    <string name="fb_login_protocol_scheme">fb194666566079699</string>
+    
+    <string name="search_hint">Tìm kiếm</string>
+</resources>
