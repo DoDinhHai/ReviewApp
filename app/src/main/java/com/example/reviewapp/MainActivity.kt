@@ -1,31 +1,36 @@
 package com.example.reviewapp
 
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.reviewapp.data.local.db.AppDatabase
 import com.example.reviewapp.data.model.MenuEntityMapper
-import com.example.reviewapp.data.repository.MenuRepositoryImpl
 import com.example.reviewapp.databinding.ActivityHomeBinding
 import com.example.reviewapp.domain.model.Articles
 import com.example.reviewapp.domain.model.Menu
-import com.example.reviewapp.presentation.ui.home.CategoryAdapter
-import com.example.reviewapp.presentation.ui.home.MenuAdapter
-import com.example.reviewapp.presentation.ui.home.NewsAdapter
-import com.example.reviewapp.presentation.ui.home.SliderAdapter
+import com.example.reviewapp.domain.usecase.menu.MenuUseCase
+import com.example.reviewapp.presentation.ui.home.*
 import com.example.reviewapp.presentation.viewmodel.HomeViewModel
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType
 import com.smarteist.autoimageslider.SliderAnimations
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -35,14 +40,18 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var db: AppDatabase
 
+    @Inject
+    lateinit var menuUseCase: MenuUseCase
+
     private val homeViewModel: HomeViewModel by viewModels()
+    private var job: Job? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         //setContentView(R.layout.activity_home)
         val actionBar: ActionBar? = supportActionBar
         actionBar?.hide()
-        homeViewModel.getNews()
+        //homeViewModel.getNews()
         loadSlideImage()
         loadMenu()
         loadCategory()
@@ -75,29 +84,30 @@ class MainActivity : AppCompatActivity() {
 
 
         val mapper = MenuEntityMapper()
-        val menuRepository = MenuRepositoryImpl(db.menuDao())
-        var listMenu: List<Menu>? = null
-        val adapter: MenuAdapter? = MenuAdapter(application, mutableListOf())
+        //val menuRepository = MenuRepositoryImpl(db.menuDao(),mapper)
+        val adapter = MenuAdapter(application, mutableListOf())
         val linearLayoutManager =
             LinearLayoutManager(application, LinearLayoutManager.HORIZONTAL, false)
         CoroutineScope(Dispatchers.IO).launch {
-            menuRepository.insertMenu(mapper.mapToEntity(menu1))
-            menuRepository.insertMenu(mapper.mapToEntity(menu2))
-            menuRepository.insertMenu(mapper.mapToEntity(menu3))
-            menuRepository.insertMenu(mapper.mapToEntity(menu4))
-            menuRepository.insertMenu(mapper.mapToEntity(menu5))
-
-            listMenu = menuRepository.getMenus()
-            listMenu?.size
-            withContext(Dispatchers.Main) {
-                listMenu?.let { adapter?.setData(it) }
-            }
+            menuUseCase.addMenu(menu1)
+            menuUseCase.addMenu(menu2)
+            menuUseCase.addMenu(menu3)
+            menuUseCase.addMenu(menu4)
+            menuUseCase.addMenu(menu5)
+//            menuRepository.insertMenu(menu1)
+//            menuRepository.insertMenu(menu3)
+//            menuRepository.insertMenu(menu4)
+//            menuRepository.insertMenu(menu5)
         }
+        homeViewModel.getMenu()
+        homeViewModel.listMenu.observe(this, Observer<List<Menu>> {
+            adapter.setData(it)
+        })
         binding.menu.adapter = adapter
         binding.menu.layoutManager = linearLayoutManager
     }
 
-    private fun loadCategory(){
+    private fun loadCategory() {
         var categoryAdapter = CategoryAdapter(mutableListOf())
 
         val gridLayoutManager = GridLayoutManager(this, 2)
@@ -106,8 +116,9 @@ class MainActivity : AppCompatActivity() {
         val dividerHorizontal = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         //Chèn một kẻ đứng giữa các phần tử
         val dividerVertical = DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL)
-        homeViewModel.getListNews().observe(this, Observer<List<Articles>> {
+        homeViewModel.listNews.observe(this, Observer<List<Articles>> {
             categoryAdapter.setData(it)
+            homeViewModel.insertArticles(it)
 
         })
         binding.listCategory.adapter = categoryAdapter
@@ -117,8 +128,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadListArticles() {
-        var adapterDemo: NewsAdapter? = null
-        adapterDemo = NewsAdapter(mutableListOf())
+        var articleAdapter: ArticleAdapter? = null
+        articleAdapter = ArticleAdapter(onItemClick)
         //hướng VERTICAL
         val linearLayoutManager =
             LinearLayoutManager(application, LinearLayoutManager.VERTICAL, false)
@@ -128,13 +139,37 @@ class MainActivity : AppCompatActivity() {
         val dividerHorizontal = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         //Chèn một kẻ đứng giữa các phần tử
         val dividerVertical = DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL)
-        homeViewModel.getListNews().observe(this, Observer<List<Articles>> {
-            adapterDemo.setData(it)
-
-        })
-        binding.listNews.adapter = adapterDemo
+        Log.d("Paging","start")
+        //binding.progressBar.isVisible = true
+        articleAdapter.addLoadStateListener { loadStates ->
+            when (loadStates.source.refresh) {
+                is LoadState.NotLoading -> {
+                    binding.progressBar.isVisible = false
+                }
+                is LoadState.Loading -> {
+                    binding.progressBar.isVisible = articleAdapter.itemCount == 0
+                }
+                is LoadState.Error -> binding.progressBar.isVisible = false
+            }
+        }
+        job?.cancel()
+        job = lifecycleScope.launch {
+            homeViewModel.getArticlePage().collectLatest{
+                Log.d("Paging","loading")
+                articleAdapter.submitData(it)
+            }
+        }
+        Log.d("Paging","end")
+        binding.listNews.adapter = articleAdapter.withLoadStateHeaderAndFooter(
+            header = ArticleLoadStateAdapter { articleAdapter.retry()},
+            footer = ArticleLoadStateAdapter { articleAdapter.retry()}
+        )
         binding.listNews.layoutManager = gridLayoutManager
         binding.listNews.addItemDecoration(dividerHorizontal)
         binding.listNews.addItemDecoration(dividerVertical)
+    }
+
+    private val onItemClick: (Articles) -> Unit = {
+
     }
 }

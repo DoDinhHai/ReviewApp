@@ -13,6 +13,9 @@ interface ArticlesDao {
     @Query("SELECT * FROM articles")
     suspend fun getAll(): List<Articles>
 
+    @Query("SELECT * FROM articles WHERE id BETWEEN ((:page - 1)*:pageSize) AND (:page * :pageSize)")
+    suspend fun getPage(page: Int, pageSize: Int): List<Articles>
+
     @Query("DELETE  FROM articles")
     suspend fun deleteAll()
 

@@ -12,7 +12,7 @@ interface MenuDao {
     suspend fun insert(menu: MenuEntity)
 
     @Query("SELECT * FROM menu")
-    suspend fun getAll(): List<Menu>
+    fun getAll(): Flow<List<Menu>>
 
     @Delete
     fun delete(menu: MenuEntity)

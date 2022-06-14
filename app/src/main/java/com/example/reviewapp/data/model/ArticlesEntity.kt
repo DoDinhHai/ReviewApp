@@ -13,7 +13,7 @@ import javax.inject.Inject
 @Entity(tableName = "articles")
 data class ArticlesEntity(
     @PrimaryKey(autoGenerate = true)
-    @field: SerializedName("id") val id: Int,
+    val id: Int,
     @field: SerializedName("author") val author: String,
     @field: SerializedName("title") val title: String,
     @field: SerializedName("description") val description: String,

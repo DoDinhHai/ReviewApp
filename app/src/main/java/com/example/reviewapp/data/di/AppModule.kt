@@ -6,13 +6,18 @@ import androidx.room.Room
 import com.example.reviewapp.ReviewApplication
 import com.example.reviewapp.data.local.db.AppDatabase
 import com.example.reviewapp.data.local.db.AppDatabase.Companion.getInstance
+import com.example.reviewapp.data.model.ArticlesEntityMapper
+import com.example.reviewapp.data.model.MenuEntityMapper
 import com.example.reviewapp.data.remote.api.NewsApi
+import com.example.reviewapp.data.repository.ArticlesRepositoryImpl
 import com.example.reviewapp.data.repository.LoginRepositoryImpl
 import com.example.reviewapp.data.repository.MenuRepositoryImpl
 import com.example.reviewapp.data.util.Constants.BASE_URL
 import com.example.reviewapp.data.util.Constants.DATABASE_NAME
+import com.example.reviewapp.domain.repository.ArticlesRepository
 import com.example.reviewapp.domain.repository.LoginRepository
 import com.example.reviewapp.domain.repository.MenuRepository
+import com.example.reviewapp.domain.usecase.articles.*
 import com.example.reviewapp.domain.usecase.menu.AddMenu
 import com.example.reviewapp.domain.usecase.menu.MenuUseCase
 import com.example.reviewapp.domain.usecase.login.LoginUseCase
@@ -117,8 +122,14 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideMenuRepository(db: AppDatabase): MenuRepository{
-        return MenuRepositoryImpl(db.menuDao())
+    fun provideMenuRepository(db: AppDatabase, mapper: MenuEntityMapper): MenuRepository{
+        return MenuRepositoryImpl(db.menuDao(),mapper)
+    }
+
+    @Singleton
+    @Provides
+    fun provideArticlesRepository(db: AppDatabase, mapper: ArticlesEntityMapper): ArticlesRepository{
+        return ArticlesRepositoryImpl(db.articlesDao(),mapper)
     }
 
     @Singleton
@@ -127,6 +138,17 @@ object AppModule {
         return MenuUseCase(
             addMenu = AddMenu(repository),
             getMenu = GetMenu(repository)
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun provideArticlesUseCase(articlesRepository: ArticlesRepository): ArticlesUseCase{
+        return ArticlesUseCase(
+            addArticles = AddArticles(articlesRepository),
+            getArticles = GetArticles(articlesRepository),
+            deleteAllArticles = DeleteAllArticles(articlesRepository),
+            getArticlePage = GetArticlePage(articlesRepository)
         )
     }
 

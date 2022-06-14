@@ -11,7 +11,7 @@ class LocalDataImpl private constructor(
 ): LocalData {
 
     private val appDb = AppDatabase.getInstance(app)
-    override suspend fun getMenuList(): List<Menu> {
+    override  fun getMenuList(): Flow<List<Menu>> {
         return appDb.menuDao().getAll()
     }
 }

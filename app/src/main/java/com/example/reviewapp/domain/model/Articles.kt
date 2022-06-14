@@ -1,11 +1,11 @@
 package com.example.reviewapp.domain.model
 
 data class Articles(
-    val id: Int,
-    val author: String,
+    var id: Int,
+    var author: String,
     val title: String,
-    val description: String,
+    var description: String,
     val url: String,
-    val urlToImage: String,
+    var urlToImage: String,
     val content: String
 ): Model()
