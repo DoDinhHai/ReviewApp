@@ -13,12 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ReviewApp">
         <activity
-            android:name=".presentation.ui.home.HomeActivity"
-            android:exported="true" />
-        <!-- <activity -->
-        <!-- android:name=".presentation.ui.LoginActivity" -->
-        <!-- android:exported="true" /> -->
-        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

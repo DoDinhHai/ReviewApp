@@ -4,11 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
-import com.example.reviewapp.R
-import com.example.reviewapp.databinding.ActivityLoginBinding
 import com.facebook.*
 import com.facebook.appevents.AppEventsLogger
 import com.facebook.login.LoginResult
@@ -43,15 +39,15 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var googleSignInClient: GoogleSignInClient
 
-    private lateinit var binding: ActivityLoginBinding
+    //private lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FacebookSdk.sdkInitialize(getApplicationContext())
         AppEventsLogger.activateApp(application);
-        binding = ActivityLoginBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+//        binding = ActivityLoginBinding.inflate(layoutInflater)
+//        val view = binding.root
+//        setContentView(view)
 
         // [START initialize_auth]
         // Initialize Firebase Auth
@@ -60,12 +56,12 @@ class LoginActivity : AppCompatActivity() {
 
         // [START config_signin]
         // Configure Google Sign In
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
-
-        googleSignInClient = GoogleSignIn.getClient(this, gso)
+//        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//            .requestIdToken(getString(R.string.default_web_client_id))
+//            .requestEmail()
+//            .build()
+//
+//        googleSignInClient = GoogleSignIn.getClient(this, gso)
         // [END config_signin]
 
         //buttonFacebookLogin = binding.btnFacebook as LoginButton
@@ -73,27 +69,27 @@ class LoginActivity : AppCompatActivity() {
         // Initialize Facebook Login button
         callbackManager = CallbackManager.Factory.create()
         //binding.btnFacebook.setPermissions("email", "public_profile")  Arrays.asList("user_status")
-        binding.btnFacebook.setPermissions(Arrays.asList("email","public_profile"))
-        binding.btnFacebook.registerCallback(callbackManager, object :
-            FacebookCallback<LoginResult> {
-            override fun onSuccess(loginResult: LoginResult) {
-                Log.d(TAG, "facebook:onSuccess:$loginResult")
-                viewModel.handleFacebookAccessToken(auth,loginResult.accessToken)
-            }
-
-            override fun onCancel() {
-                Log.d(TAG, "facebook:onCancel")
-            }
-
-            override fun onError(error: FacebookException) {
-                Log.d(TAG, "facebook:onError", error)
-            }
-        })
-        // [END initialize_fblogin]
-        binding.btnGmail.setSize(SignInButton.SIZE_WIDE)
-        binding.btnGmail.setOnClickListener(View.OnClickListener {
-            signIn()
-        })
+//        binding.btnFacebook.setPermissions(Arrays.asList("email","public_profile"))
+//        binding.btnFacebook.registerCallback(callbackManager, object :
+//            FacebookCallback<LoginResult> {
+//            override fun onSuccess(loginResult: LoginResult) {
+//                Log.d(TAG, "facebook:onSuccess:$loginResult")
+//                viewModel.handleFacebookAccessToken(auth,loginResult.accessToken)
+//            }
+//
+//            override fun onCancel() {
+//                Log.d(TAG, "facebook:onCancel")
+//            }
+//
+//            override fun onError(error: FacebookException) {
+//                Log.d(TAG, "facebook:onError", error)
+//            }
+//        })
+//        // [END initialize_fblogin]
+//        binding.btnGmail.setSize(SignInButton.SIZE_WIDE)
+//        binding.btnGmail.setOnClickListener(View.OnClickListener {
+//            signIn()
+//        })
     }
 
     // [START onactivityresult]

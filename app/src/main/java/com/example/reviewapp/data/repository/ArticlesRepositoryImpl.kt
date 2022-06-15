@@ -1,8 +1,10 @@
 package com.example.reviewapp.data.repository
 
+import androidx.lifecycle.LiveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.liveData
 import com.example.reviewapp.data.local.db.dao.ArticlesDao
 import com.example.reviewapp.data.model.ArticlesEntity
 import com.example.reviewapp.data.model.ArticlesEntityMapper
@@ -28,8 +30,8 @@ class ArticlesRepositoryImpl @Inject constructor(private val dao: ArticlesDao, p
         dao.deleteAll()
     }
 
-    override fun getArticlePage(): Flow<PagingData<Articles>> = Pager(
+    override fun getArticlePage(): LiveData<PagingData<Articles>> = Pager(
         config = PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
         pagingSourceFactory = { ArticlePagingResource(dao)}
-    ).flow
+    ).liveData
 }

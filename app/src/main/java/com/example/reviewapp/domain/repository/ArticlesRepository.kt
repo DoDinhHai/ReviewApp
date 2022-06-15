@@ -1,5 +1,6 @@
 package com.example.reviewapp.domain.repository
 
+import androidx.lifecycle.LiveData
 import androidx.paging.PagingData
 import com.example.reviewapp.domain.model.Articles
 import kotlinx.coroutines.flow.Flow
@@ -15,5 +16,5 @@ interface ArticlesRepository {
 
     suspend fun deleteAll()
 
-    fun getArticlePage(): Flow<PagingData<Articles>>
+    fun getArticlePage(): LiveData<PagingData<Articles>>
 }

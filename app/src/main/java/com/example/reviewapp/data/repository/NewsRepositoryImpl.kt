@@ -17,7 +17,7 @@ class NewsRepositoryImpl @Inject constructor(private val newsApi: NewsApi  ): Ne
     ) = withContext(Dispatchers.IO) {
         //https://newsapi.org/v2/everything?q=tesla&from=2022-04-26&sortBy=publishedAt&apiKey=6ea78d2b5e8f457fa74a45ca1cac3240
         try {
-            val response = newsApi.getAllNews("tesla","2022-05-13","publishedAt","6ea78d2b5e8f457fa74a45ca1cac3240")
+            val response = newsApi.getAllNews("tesla","2022-05-15","publishedAt","6ea78d2b5e8f457fa74a45ca1cac3240")
             when (response.isSuccessful) {
                 true -> {
                     val listNews = response.body()

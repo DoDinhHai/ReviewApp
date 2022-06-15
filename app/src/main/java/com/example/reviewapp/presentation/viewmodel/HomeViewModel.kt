@@ -1,10 +1,7 @@
 package com.example.reviewapp.presentation.viewmodel
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+
+import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.reviewapp.data.repository.NewsRepositoryImpl
@@ -33,6 +30,9 @@ class HomeViewModel @Inject constructor(
 
     private val _listNews = MutableLiveData<List<Articles>>()
     val listNews: LiveData<List<Articles>> get() = _listNews
+
+    private val _listArticles = MutableLiveData<PagingData<Articles>>()
+    val listArticles: LiveData<PagingData<Articles>> get() = _listArticles
 
     private val _requestFail = MutableLiveData<String>()
     val requestFail: LiveData<String> get() = _requestFail
@@ -91,8 +91,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getArticlePage(): Flow<PagingData<Articles>> {
-        return articlesUseCase.getArticlePage.invoke().cachedIn(viewModelScope)
+    fun getArticlePage(): LiveData<PagingData<Articles>> {
+        val response = articlesUseCase.getArticlePage.invoke().cachedIn(viewModelScope)
+        _listArticles.postValue(articlesUseCase.getArticlePage.invoke().cachedIn(viewModelScope).value)
+        return response
     }
-
 }

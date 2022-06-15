@@ -8,16 +8,16 @@ import com.example.reviewapp.domain.model.Articles
 interface ArticlesDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(articlesEntity: ArticlesEntity)
+    fun insert(articlesEntity: ArticlesEntity)
 
     @Query("SELECT * FROM articles")
-    suspend fun getAll(): List<Articles>
+    fun getAll(): List<Articles>
 
     @Query("SELECT * FROM articles WHERE id BETWEEN ((:page - 1)*:pageSize) AND (:page * :pageSize)")
     suspend fun getPage(page: Int, pageSize: Int): List<Articles>
 
     @Query("DELETE  FROM articles")
-    suspend fun deleteAll()
+    fun deleteAll()
 
     @Delete
     fun delete(articlesEntity: ArticlesEntity)

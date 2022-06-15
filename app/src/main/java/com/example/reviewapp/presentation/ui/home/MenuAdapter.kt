@@ -8,7 +8,7 @@ import com.example.reviewapp.databinding.MenuItemBinding
 import com.example.reviewapp.domain.model.Articles
 import com.example.reviewapp.domain.model.Menu
 
-class MenuAdapter(private var context: Context, var menuList: List<Menu>) :
+class MenuAdapter( var menuList: List<Menu>) :
     RecyclerView.Adapter<MenuAdapter.MenuViewHolder>() {
 
     class MenuViewHolder(private val itemBinding: MenuItemBinding) :
@@ -20,7 +20,7 @@ class MenuAdapter(private var context: Context, var menuList: List<Menu>) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuViewHolder {
-        val itemBinding = MenuItemBinding.inflate(LayoutInflater.from(context), parent, false)
+        val itemBinding = MenuItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MenuViewHolder(itemBinding)
     }
 
