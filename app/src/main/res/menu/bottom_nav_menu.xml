@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/runFragment"
-        android:title=""
+    <item android:id="@+id/homeFragment"
+        android:title="home"
         android:icon="@drawable/ic_home" />
 
     <item android:id="@+id/videoFragment"
-        android:title=""
+        android:title="video"
         android:icon="@drawable/ic_play" />
 
     <item android:id="@+id/addFragment"
-        android:title=""
+        android:title="add "
         android:icon="@drawable/ic_add" />
 
     <item android:id="@+id/notificationFragment"
-        android:title=""
+        android:title="notify"
         android:icon="@drawable/ic_notification" />
 
     <item android:id="@+id/userFragment"
-        android:title=""
+        android:title="user"
         android:icon="@drawable/ic_user" />
 
 </menu>

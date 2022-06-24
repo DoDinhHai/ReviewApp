@@ -25,6 +25,8 @@ class HomeViewModel @Inject constructor(
     private val newsRepositoryImpl: NewsRepositoryImpl
 ) : ViewModel() {
 
+
+    private var oldFragment : String? = null
     private val _listMenu = MutableLiveData<List<Menu>>()
     val listMenu: LiveData<List<Menu>> get() = _listMenu
 
@@ -34,6 +36,9 @@ class HomeViewModel @Inject constructor(
     private val _listArticles = MutableLiveData<PagingData<Articles>>()
     val listArticles: LiveData<PagingData<Articles>> get() = _listArticles
 
+
+    private val _articles = MutableLiveData<Articles>()
+    val articles: LiveData<Articles> get() = _articles
     private val _requestFail = MutableLiveData<String>()
     val requestFail: LiveData<String> get() = _requestFail
 
@@ -46,7 +51,7 @@ class HomeViewModel @Inject constructor(
 
     fun getMenu() {
         menuUseCase.getMenu.invoke().onEach {
-            _listMenu.value = it
+            _listMenu.postValue(it)
         }.launchIn(viewModelScope)
     }
 
@@ -57,6 +62,7 @@ class HomeViewModel @Inject constructor(
             newsRepositoryImpl.getNews(
                 onSuccess = {
                     _listNews.postValue(it.articles)
+                    insertArticles(it.articles)
                 },
                 onFailed = {
                     _requestFail.postValue(it)
@@ -96,4 +102,15 @@ class HomeViewModel @Inject constructor(
         _listArticles.postValue(articlesUseCase.getArticlePage.invoke().cachedIn(viewModelScope).value)
         return response
     }
+
+    fun setArticle(articles: Articles){
+        _articles.value = articles
+    }
+
+    fun setOldFragment(tag: String){
+        oldFragment = tag
+    }
+
+    fun getOldFragment() = oldFragment
+
 }

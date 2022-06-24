@@ -17,7 +17,7 @@ import com.example.reviewapp.data.model.UserEntity
 import com.example.reviewapp.data.util.Constants.DATABASE_NAME
 
 
-@Database(entities = [UserEntity::class, MenuEntity::class, ArticlesEntity::class], version = 2, exportSchema = true)
+@Database(entities = [UserEntity::class, MenuEntity::class, ArticlesEntity::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao

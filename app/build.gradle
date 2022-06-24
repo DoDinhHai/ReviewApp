@@ -78,11 +78,12 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2'
 
     //Dagger - Hilt
-    def hiltVersion = '2.40'
+    def hiltVersion = '2.41'
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
 
-    implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
+    implementation("androidx.hilt:hilt-work:1.0.0")
+    //implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
     kapt "androidx.hilt:hilt-compiler:1.0.0"
 
     def  pagingVersion = '3.1.1'
@@ -109,4 +110,7 @@ dependencies {
 
     //other
     implementation 'com.github.smarteist:autoimageslider:1.4.0'
+
+    // required to avoid crash on Android 12 API 31
+    implementation 'androidx.work:work-runtime-ktx:2.7.1'
 }
