@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.example.reviewapp.R
-import com.example.reviewapp.domain.model.Menu
 import com.smarteist.autoimageslider.SliderViewAdapter
 
 class SliderAdapter(var images: IntArray) : SliderViewAdapter<SliderAdapter.Holder>() {

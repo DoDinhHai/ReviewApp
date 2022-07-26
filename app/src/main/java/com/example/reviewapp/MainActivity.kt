@@ -2,11 +2,9 @@ package com.example.reviewapp
 
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.iterator
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.example.reviewapp.data.local.db.AppDatabase
@@ -50,29 +48,31 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.homeFragment -> {
                     loadFragment("HOME" )
+                    return@setOnItemSelectedListener true
                 }
                 R.id.videoFragment -> {
                     loadFragment("VIDEO")
-                    setIsCheckMenu(item)
+                    return@setOnItemSelectedListener true
                 }
                 R.id.addFragment -> {
                     loadFragment("ADD")
+                    return@setOnItemSelectedListener true
                 }
                 R.id.notificationFragment -> {
                     loadFragment("NOTIFY")
+                    return@setOnItemSelectedListener true
                 }
                 R.id.userFragment -> {
                     loadFragment("USER")
+                    return@setOnItemSelectedListener true
                 }
             }
             false
         }
     }
 
-    private fun setIsCheckMenu(item: MenuItem){
-        for (menuItem in  binding.bottomNavigationView.menu) {
-            menuItem.isChecked = menuItem.itemId == item.itemId
-        }
+    override fun onBackPressed() {
+        return
     }
 
     private fun loadMenu() {
@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity() {
                 }else{
                     transaction.show(fragment)
                 }
-                hideFragment("HOME")
+                hideFragment(tag)
             }
             "VIDEO" -> {
                 fragment = supportFragmentManager.findFragmentByTag(tag)
@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity() {
                 }else{
                     transaction.show(fragment)
                 }
-                hideFragment("VIDEO")
+                hideFragment(tag)
             }
             "ADD" -> {
                 fragment = supportFragmentManager.findFragmentByTag(tag)
@@ -133,7 +133,7 @@ class MainActivity : AppCompatActivity() {
                 }else{
                     transaction.show(fragment)
                 }
-                hideFragment("ADD")
+                hideFragment(tag)
             }
             "NOTIFY" -> {
                 fragment = supportFragmentManager.findFragmentByTag(tag)
@@ -145,19 +145,20 @@ class MainActivity : AppCompatActivity() {
                 }else{
                     transaction.show(fragment)
                 }
-                hideFragment("NOTIFY")
+                hideFragment(tag)
             }
             "USER" -> {
                 fragment = supportFragmentManager.findFragmentByTag(tag)
                 if (fragment == null){
                     fragment = UserFragment()
+                    fragment.getView()?.setBackgroundColor(R.color.white);
                     transaction.add(R.id.nav_host_fragment, fragment,tag)
                     transaction.addToBackStack(null)
 
                 }else{
                     transaction.show(fragment)
                 }
-                hideFragment("USER")
+                hideFragment(tag)
             }
         }
         transaction.commit()

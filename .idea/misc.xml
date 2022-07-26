@@ -19,11 +19,14 @@
         <entry key="..\:/Flutter/ReviewApp/app/src/main/res/layout/fragment_notification.xml" value="0.1551644279759148" />
         <entry key="..\:/Flutter/ReviewApp/app/src/main/res/layout/fragment_user.xml" value="0.1551644279759148" />
         <entry key="..\:/Flutter/ReviewApp/app/src/main/res/layout/fragment_video.xml" value="0.1550925925925926" />
+        <entry key="..\:/Flutter/ReviewApp/app/src/main/res/layout/layout.xml" value="0.29907407407407405" />
         <entry key="..\:/Flutter/ReviewApp/app/src/main/res/layout/login_fragment.xml" value="0.1" />
         <entry key="..\:/Flutter/ReviewApp/app/src/main/res/layout/menu_item.xml" value="0.21167207040296435" />
         <entry key="..\:/Flutter/ReviewApp/app/src/main/res/layout/news_item.xml" value="0.22201665124884365" />
         <entry key="..\:/Flutter/ReviewApp/app/src/main/res/layout/slider_item.xml" value="0.21157407407407408" />
-        <entry key="..\:/Flutter/ReviewApp/app/src/main/res/menu/bottom_nav_menu.xml" value="0.2421875" />
+        <entry key="..\:/Flutter/ReviewApp/app/src/main/res/layout/user_nav_menu_header.xml" value="0.4" />
+        <entry key="..\:/Flutter/ReviewApp/app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
+        <entry key="..\:/Flutter/ReviewApp/app/src/main/res/menu/user_nav_menu.xml" value="0.264" />
         <entry key="..\:/Flutter/ReviewApp/app/src/main/res/xml/searchable.xml" value="0.2152777777777778" />
       </map>
     </option>
